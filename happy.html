@@ -6,27 +6,56 @@
 		body{width: 100%;height: 100%;margin:0;padding:0;overflow: hidden;}
 		.city{width:100%;position:fixed;bottom: 0px;z-index: 100;}
 		.city img{width: 100%;}
+
 	</style>
 	<title>Happy new year</title>
 </head>
 <body onselectstart = "return false">
+<div style="height:100%;overflow:hidden;background-color: black;">
+	<audio autoplay="autoplay"><source src="./mp3/bgm.mp3" type="audio/mpeg" /></audio>
+	<canvas id='cas';class="txt";style="background-color:rgba(0,5,24,1);"></canvas>
 
-<div style="height:100%;overflow:hidden;">
-
-	<canvas id='cas' style="background-color:rgba(0,5,24,1);"></canvas>
 	<div class="city"><img src="./images/city.png" alt="" /></div>
 	<img src="./images/moon.png" alt="" id="moon" style="visibility: hidden;"/>
-	<!-- <div style="display:none">
+	<div style="display:none">
 		<div class="shape">新年快乐</div>
 		<div class="shape">合家幸福</div>
         <div class="shape">万事如意</div>
         <div class="shape">心想事成</div>
         <div class="shape">财源广进</div>
-	</div> -->
-	
+	</div>
 </div>
+
 	
 	<script>
+		// var text = "我有一个梦想我有一个梦想我有一个梦想我有一个梦想";
+		// var num = text.length;
+		
+		// var i =0;
+		// function show() {
+		//     var shower = text.substr(0,i);
+		//     document.getElementById("txt").innerHTML = shower;
+		//     i++;
+		//     if(i + 1 >= num){
+		//         clearInterval("done");
+		//     }
+		// }
+		// var done=setInterval("show()",500);
+		//获取Canvas对象(画布)
+		// var canvas = document.getElementById("cas");
+		// //简单地检测当前浏览器是否支持Canvas对象，以免在一些不支持html5的浏览器中提示语法错误
+		// var txt="CodePlayer+中文测试"
+		// if(canvas.getContext){
+		// //获取对应的CanvasRenderingContext2D对象(画笔)
+		// var ctx = canvas.getContext("2d");
+		// //设置字体样式
+		// ctx.font = "30px Courier New";
+		// //设置字体填充颜色
+		// ctx.fillStyle = "blue";
+		// //从坐标点(50,50)开始绘制文字
+		// ctx.fillText("CodePlayer+中文测试", 50, 50);
+		// }
+
 		var canvas = document.getElementById("cas");
 		var ocas = document.createElement("canvas");
 		var octx = ocas.getContext("2d");
@@ -107,6 +136,7 @@
 			else {
 				moon.onload = function(){
 					ctx.drawImage(moon ,centerX , centerY , width , width)
+					
 				}
 			}
 			var index = 0;
@@ -354,6 +384,51 @@
 				this.paint();
 			}
 		}
+		function autoPlay(src) {
+		  const audio = new Audio();
+		  // 该元素用来在页面上控制音乐的播放和暂停
+		  const musicEle = document.querySelector("#music")
+		  audio.src = src;
+		  audio.preload = "auto"
+		  let played = false;
+		
+		  // 第一次触摸结束后开始播放音乐
+		  document.addEventListener("touchend", () => {
+		    if (played) return;
+		    if (audio.paused) {
+		      played = true;
+		      audio.play();
+		    }
+		  })
+		
+		  // 兼容微信
+		  if (window.WeixinJSBridge) {
+		    WeixinJSBridge.invoke("getNetworkType", {}, function (e) {
+		      played = true;
+		      audio.play();
+		    }, false);
+		  } else {
+		    document.addEventListener("WeixinJSBridgeReady", function () {
+		      WeixinJSBridge.invoke("getNetworkType", {}, function (e) {
+		        played = true;
+		        audio.play();
+		      });
+		    }, false);
+		  }
+		
+		  // 控制音乐的播放和暂停
+		  musicEle.addEventListener("click", function () {
+		    if (audio.paused) {
+		      this.className = "on";
+		      audio.play();
+		    } else {
+		      this.className = "off"
+		      audio.pause();
+		    }
+		  })
+		}
+		autoPlay("./mp3/bgm.mp3");
+		
 	</script>
 
 </body>
